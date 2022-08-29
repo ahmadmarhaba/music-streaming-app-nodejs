@@ -10,16 +10,30 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-model Music {
-  id           Int    @id @default(autoincrement())
-  author       String
-  authorImage  String
-  albumName    String
-  songName     String
-  songImage    String
-  songUrl      String
-  songDuration Float
-  songSize     Float
-  songMimeType String
-  cloudinaryId String
+model Author {
+  id     String  @id @default(uuid())
+  name   String  @unique
+  image  String
+  Albums Album[]
+}
+
+model Album {
+  id       String @id @default(uuid())
+  name     String
+  image    String
+  author   Author @relation(fields: [authorId], references: [id])
+  authorId String
+  Songs    Song[]
+}
+
+model Song {
+  id       String @id @default(uuid())
+  name     String
+  image    String
+  url      String
+  duration Float
+  size     Float
+  mimeType String
+  album    Album  @relation(fields: [albumId], references: [id])
+  albumId  String
 }

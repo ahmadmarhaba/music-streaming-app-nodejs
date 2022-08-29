@@ -5,7 +5,6 @@ const { cloudinaryUpload } = require('./services/cloudinary');
 const { PrismaClient } = require('@prisma/client');
 const prisma = new PrismaClient();
 
-// const CImage = require('./db/image');
 const app = express();
 app.use(express.json());
 app.use(function (req, res, next) {
@@ -19,10 +18,65 @@ app.use(function (req, res, next) {
 app.get("/", function (req, res) {
   res.send("Hello World");
 });
+app.get("/api/artist", async (req, res) => {
+  const { id } = req.query;
 
-app.get('/api/fetch', async (req, res) => {
-  const job = await prisma.music.findMany();
-  res.json(job);
+  const author = await prisma.author.findUnique({
+    where: {
+      id
+    }
+  });
+  const albums = await prisma.Album.findMany({
+    where: {
+      authorId: id
+    }
+  });
+  res.json({
+    author,
+    albums
+  });
+});
+app.get("/api/explore", async (req, res) => {
+  const suggest = await prisma.author.findMany({
+    include: {
+      Albums: {
+        take: 1,
+        include: {
+          Songs: {
+            take: 1
+          }
+        }
+      }
+    },
+  });
+  const popular = await prisma.Song.findMany({
+    take: 5,
+    include: {
+      album: {
+        include: {
+          author: true
+        }
+      }
+    },
+  });
+  res.json({
+    popular,
+    suggest
+  });
+});
+
+app.get('/api/playlist', async (req, res) => {
+  const { id } = req.query;
+  const data = await prisma.Album.findUnique({
+    where: {
+      id
+    },
+    include: {
+      Songs: true,
+      author: true
+    }
+  });
+  res.json(data);
 });
 
 const singleUpload = upload.single('song');
@@ -42,29 +96,23 @@ app.post('/api/upload', singleUploadCtrl, async (req, res) => {
 
     console.log("Upload started")
     const file64 = formatBufferTo64(req.file);
-    const folder = `${req.body.author}/${req.body.albumName}/`;
+    const folder = `${req.body.author}/${req.body.album}/`;
     const uploadResult = await cloudinaryUpload(file64.content, folder);
 
     if (!uploadResult.asset_id)
       return res.status(422).send({ message: uploadResult.message })
     const data = {
-      cloudinaryId: uploadResult.public_id,
-      author: req.body.author,
-      authorImage: req.body.authorImage,
-      albumName: req.body.albumName,
-      songName: req.body.songName,
-      songImage: req.body.songImage,
       songUrl: uploadResult.secure_url,
-      songDuration: uploadResult.duration,
-      songMimeType: uploadResult.format,
-      songSize: uploadResult.bytes,
+      duration: uploadResult.duration,
+      mimeType: uploadResult.format,
+      size: uploadResult.bytes,
     }
-    await prisma.music.create({ data });
+    // console.log(data)
     console.log("Uploaded successfully")
     //success
-    return res.json(data);
+    return res.send("Uploaded successfully");
   } catch (e: any) {
-    console.log(e)
+    console.error(e)
     return res.status(422).send({ message: e.message })
   }
 })
