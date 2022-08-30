@@ -64,7 +64,26 @@ app.get("/api/explore", async (req, res) => {
     suggest
   });
 });
-
+app.get('/api/search', async (req, res) => {
+  const { text } = req.query;
+  const data = await prisma.Song.findMany({
+    take: 5,
+    where: {
+      name: {
+        contains: text,
+        mode: 'insensitive'
+      }
+    },
+    include: {
+      album: {
+        include: {
+          author: true
+        }
+      }
+    }
+  });
+  res.json(data);
+});
 app.get('/api/playlist', async (req, res) => {
   const { id } = req.query;
   const data = await prisma.Album.findUnique({
@@ -72,7 +91,15 @@ app.get('/api/playlist', async (req, res) => {
       id
     },
     include: {
-      Songs: true,
+      Songs: {
+        include: {
+          album: {
+            include: {
+              author: true
+            }
+          }
+        }
+      },
       author: true
     }
   });
@@ -90,32 +117,32 @@ const singleUploadCtrl = (req: any, res: any, next: any) => {
   })
 }
 
-app.post('/api/upload', singleUploadCtrl, async (req, res) => {
-  try {
-    if (!req.file) { throw new Error('Audio is not presented!'); }
+// app.post('/api/upload', singleUploadCtrl, async (req, res) => {
+//   try {
+//     if (!req.file) { throw new Error('Audio is not presented!'); }
 
-    console.log("Upload started")
-    const file64 = formatBufferTo64(req.file);
-    const folder = `${req.body.author}/${req.body.album}/`;
-    const uploadResult = await cloudinaryUpload(file64.content, folder);
+//     console.log("Upload started")
+//     const file64 = formatBufferTo64(req.file);
+//     const folder = `${req.body.author}/${req.body.album}/`;
+//     const uploadResult = await cloudinaryUpload(file64.content, folder);
 
-    if (!uploadResult.asset_id)
-      return res.status(422).send({ message: uploadResult.message })
-    const data = {
-      songUrl: uploadResult.secure_url,
-      duration: uploadResult.duration,
-      mimeType: uploadResult.format,
-      size: uploadResult.bytes,
-    }
-    // console.log(data)
-    console.log("Uploaded successfully")
-    //success
-    return res.send("Uploaded successfully");
-  } catch (e: any) {
-    console.error(e)
-    return res.status(422).send({ message: e.message })
-  }
-})
+//     if (!uploadResult.asset_id)
+//       return res.status(422).send({ message: uploadResult.message })
+//     const data = {
+//       songUrl: uploadResult.secure_url,
+//       duration: uploadResult.duration,
+//       mimeType: uploadResult.format,
+//       size: uploadResult.bytes,
+//     }
+//     // console.log(data)
+//     console.log("Uploaded successfully")
+//     //success
+//     return res.send("Uploaded successfully");
+//   } catch (e: any) {
+//     console.error(e)
+//     return res.status(422).send({ message: e.message })
+//   }
+// })
 
 app.listen(4000, () => {
   console.log("Listening on port 4000")

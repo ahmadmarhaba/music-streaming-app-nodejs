@@ -94,7 +94,7 @@ const prisma = new PrismaClient();
         const nf = await prisma.author.create({
             data: {
                 name: 'NF',
-                image: "https://yt3.ggpht.com/ytc/AMLnZu9zxNZhr74YL-BKr2Zpy0PwMGWqjoUrYNQNY6vSuA=s900-c-k-c0x00ffffff-no-rj",
+                image: "https://p16.resso.me/img/tos-alisg-i-0000/761b2008c81d4bf48edf01d5d776d46a~c5_500x500.jpg",
                 Albums: {
                     create: {
                         name: "The Search",
