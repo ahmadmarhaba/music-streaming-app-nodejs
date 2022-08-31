@@ -1,7 +1,7 @@
 import express from "express";
-const { formatBufferTo64 } = require('./services/data-uri');
-const { upload } = require('./services/multer');
-const { cloudinaryUpload } = require('./services/cloudinary');
+// const { formatBufferTo64 } = require('./services/data-uri');
+// const { upload } = require('./services/multer');
+// const { cloudinaryUpload } = require('./services/cloudinary');
 const { PrismaClient } = require('@prisma/client');
 const prisma = new PrismaClient();
 
@@ -106,16 +106,16 @@ app.get('/api/playlist', async (req, res) => {
   res.json(data);
 });
 
-const singleUpload = upload.single('song');
-const singleUploadCtrl = (req: any, res: any, next: any) => {
-  singleUpload(req, res, (error: any) => {
-    if (error) {
-      return res.status(422).send({ message: 'Audio upload fail!' });
-    }
+// const singleUpload = upload.single('song');
+// const singleUploadCtrl = (req: any, res: any, next: any) => {
+//   singleUpload(req, res, (error: any) => {
+//     if (error) {
+//       return res.status(422).send({ message: 'Audio upload fail!' });
+//     }
 
-    next();
-  })
-}
+//     next();
+//   })
+// }
 
 // app.post('/api/upload', singleUploadCtrl, async (req, res) => {
 //   try {
@@ -144,6 +144,6 @@ const singleUploadCtrl = (req: any, res: any, next: any) => {
 //   }
 // })
 
-app.listen(4000, () => {
+app.listen(process.env.PORT || 4000, () => {
   console.log("Listening on port 4000")
 });
