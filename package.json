@@ -2,10 +2,10 @@
   "name": "music-streaming-app-nodejs",
   "version": "1.0.0",
   "description": "",
-  "main": "main.js",
+  "main": "index.js",
   "scripts": {
-    "dev": "ts-node src/main.ts",
-    "start": "node main.ts",
+    "dev": "ts-node src/index.ts",
+    "start": "node index.ts",
     "lint": "eslint . --fix",
     "test": "echo Test done.",
     "build": "tsc"
