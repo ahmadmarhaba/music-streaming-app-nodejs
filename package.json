@@ -8,7 +8,8 @@
     "start": "node index.js",
     "lint": "eslint . --fix",
     "test": "echo Test done.",
-    "build": "tsc"
+    "build": "tsc",
+    "package": "ncc build --source-map --license licenses.txt"
   },
   "author": "",
   "license": "ISC",
