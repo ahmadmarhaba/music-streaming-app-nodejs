@@ -4,9 +4,11 @@
   "description": "",
   "main": "main.js",
   "scripts": {
-    "start": "ts-node src/main.ts",
+    "dev": "ts-node src/main.ts",
+    "start": "node main.ts",
     "lint": "eslint . --fix",
-    "test": "echo Test done."
+    "test": "echo Test done.",
+    "build": "tsc"
   },
   "author": "",
   "license": "ISC",

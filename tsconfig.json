@@ -1,9 +1,11 @@
 {
     "extends": "@tsconfig/node16/tsconfig.json",
-    "compilerOptions": {    
-        "lib": ["es2021"],
+    "compilerOptions": {
+        "lib": [
+            "esnext"
+        ],
         "module": "commonjs",
-        "target": "es2021",
+        "target": "esnext",
         "outDir": "dist",
         "strict": true,
         "esModuleInterop": true,
@@ -11,6 +13,10 @@
         "forceConsistentCasingInFileNames": true,
         "moduleResolution": "node"
     },
-    "include": ["src"],
-    "exclude": ["node_modules"]
+    "include": [
+        "src"
+    ],
+    "exclude": [
+        "node_modules"
+    ]
 }
