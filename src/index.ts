@@ -8,7 +8,7 @@ const prisma = new PrismaClient();
 const app = express();
 app.use(express.json());
 app.use(function (req, res, next) {
-  res.setHeader('Access-Control-Allow-Origin', 'http://localhost:5000');
+  res.setHeader('Access-Control-Allow-Origin', 'https://ahmadmarhaba.github.io/music-streaming-app-react/');
   res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS, PUT, PATCH, DELETE');
   res.setHeader('Access-Control-Allow-Headers', 'X-Requested-With,content-type');
   (res as any).setHeader('Access-Control-Allow-Credentials', true);
