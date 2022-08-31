@@ -12,7 +12,10 @@ const prisma = new PrismaClient();
 const app = express();
 app.use(express.json());
 app.use(function (req, res, next) {
-  res.setHeader('Access-Control-Allow-Origin', [`${process.env.NODE_ENV ? "http://localhost:5000" : ''}`, "https://ahmadmarhaba.github.io"]);
+  const allowedDomain = process.env.NODE_ENV ? "http://localhost:5000" : "https://ahmadmarhaba.github.io";
+
+  res.setHeader('Access-Control-Allow-Origin', allowedDomain);
+
   res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS, PUT, PATCH, DELETE');
   res.setHeader('Access-Control-Allow-Headers', 'X-Requested-With,content-type');
   (res as any).setHeader('Access-Control-Allow-Credentials', true);
